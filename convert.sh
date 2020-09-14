@@ -20,10 +20,28 @@ for ROOT in */ ; do
     cd "${ROOT}"
     git checkout master
     git pull
-    git checkout -b main
+    git branch main
+    git checkout main
     # git push --set-upstream origin main
-    git branch -d master
-    git checkout -b "${ISSUE_BRANCH}"
+    # git branch -d master
+    git branch "${ISSUE_BRANCH}"
+    git checkout "${ISSUE_BRANCH}"
+
+    # Update github actions
+    find . -type f -path '.github/workflows/*' -exec sed -i '' 's/- master/- main/g' {} \;
+    git add .github/workflows
+    git commit -m 'update worflows to reference main branch'
+
+    # Update composer.json and composer.lock
+    sed -i '' 's/dev-master/dev-main/g' composer.json
+    composer update --lock
+    git add composer.json composer.lock
+    git commit -m 'update composer.json and composer.lock to reference main branch'
+
+    # Update *.md files
+    find . -name '*.md' -exec sed -E -i '' sed 's|(https://github\.com/az-digital/.*)(master)(.*)|\1main\3|g' {} && git add {} \;
+    git commit -m 'update md files reference main branch'
+
     # git push --set-upstream origin "${ISSUE_BRANCH}"
   )
 done
