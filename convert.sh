@@ -39,7 +39,7 @@ for ROOT in */ ; do
     git commit -m 'update composer.json and composer.lock to reference main branch'
 
     # Update *.md files
-    find . -name '*.md' -exec sed -E -i '' sed 's|(https://github\.com/az-digital/.*)(master)(.*)|\1main\3|g' {} && git add {} \;
+    find . -name '*.md' -exec sed -E -i '' 's|(https://github\.com/az-digital/.*)(master)(.*)|\1main\3|g' {} && git add {} \;
     git commit -m 'update md files reference main branch'
 
     # git push --set-upstream origin "${ISSUE_BRANCH}"
